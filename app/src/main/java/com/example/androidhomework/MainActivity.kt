@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.annotation.DrawableRes
+import androidx.core.view.get
 import com.dto.Post
 import com.example.androidhomework.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val post = Post(
-            id = 0L,
+            id = 1,
             author = "Maxim",
             content = "Content",
             published = "Time",
@@ -31,12 +32,21 @@ class MainActivity : AppCompatActivity() {
 
         binding.render(post)
 
+        binding.root.setOnClickListener{
+            println(binding.root.get(post.id.toInt()))
+        }
+
+        binding.netologyMark.setOnClickListener{
+            println("I love programming very mutch")
+        }
+
         binding.postButtonLike.setOnClickListener {
             post.likeByMe = !post.likeByMe
             post.likes = checkLikeByMe(post.likeByMe, post.likes)
             binding.postButtonLike.setImageResource(getPostButtonLikeResId(post.likeByMe))
             binding.postLikeNumber.text = setNumberOrder(post.likes)
         }
+
         binding.postButtonShare.setOnClickListener {
             post.share++
             binding.postShareNumber.text = setNumberOrder(post.share)
@@ -83,12 +93,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     //проверка на наличие самолайка
-    private fun checkLikeByMe(like: Boolean, num: Int): Int{
-        var newNum: Int = num
-        if(like){
-            return newNum + 1
+    private fun checkLikeByMe(like: Boolean, num: Int): Int {
+        if (like) {
+            return num + 1
+        } else {
+            return num - 1
         }
-        else{ return newNum - 1}
     }
 
 }
+
