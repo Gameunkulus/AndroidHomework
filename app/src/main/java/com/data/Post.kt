@@ -1,4 +1,4 @@
-package com.dto
+package com.data
 
 data class Post(
     val id: Int,

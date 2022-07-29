@@ -3,16 +3,17 @@ package com.example.androidhomework
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageButton
 import androidx.annotation.DrawableRes
 import androidx.core.view.get
-import com.dto.Post
+import com.data.Post
 import com.example.androidhomework.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
+import com.viewModel.PostViewModel
 import kotlin.math.floor
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel = PostViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,36 +21,23 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val post = Post(
-            id = 1,
-            author = "Maxim",
-            content = "Content",
-            published = "Time",
-            likes = 99,
-            share = 98,
-            likeByMe = false
-        )
-
-        binding.render(post)
-
-        binding.root.setOnClickListener{
-            println(binding.root.get(post.id.toInt()))
+        viewModel.data.observe(this) {post ->
+            binding.render(post)
         }
 
-        binding.netologyMark.setOnClickListener{
+        binding.netologyMark.setOnClickListener {
             println("I love programming very mutch")
         }
 
         binding.postButtonLike.setOnClickListener {
-            post.likeByMe = !post.likeByMe
-            post.likes = checkLikeByMe(post.likeByMe, post.likes)
-            binding.postButtonLike.setImageResource(getPostButtonLikeResId(post.likeByMe))
-            binding.postLikeNumber.text = setNumberOrder(post.likes)
+            viewModel.onLikeClicked()
+            viewModel.getPostButtonLikeResId(viewModel.data.value!!.likeByMe)
+            binding.postLikeNumber.text = viewModel.setNumOrder(viewModel.data.value!!.likes)
         }
 
         binding.postButtonShare.setOnClickListener {
-            post.share++
-            binding.postShareNumber.text = setNumberOrder(post.share)
+            viewModel.onShareCkicked()
+            binding.postShareNumber.text = viewModel.setNumOrder(viewModel.data.value!!.share)
         }
 
     }
@@ -57,49 +45,16 @@ class MainActivity : AppCompatActivity() {
     private fun ActivityMainBinding.render(post: Post) {
         postText.text = post.author
         postText.text = post.content
-        postLikeNumber.text = setNumberOrder(post.likes)
+        postLikeNumber.text = viewModel.setNumOrder(post.likes)
         postTimePanel.text = post.published
-        postShareNumber.text = setNumberOrder(post.share)
-        postButtonLike.setImageResource(getPostButtonLikeResId(post.likeByMe))
+        postShareNumber.text = viewModel.setNumOrder(post.share)
+        postButtonLike.setImageResource(viewModel.getPostButtonLikeResId(post.likeByMe))
     }
 
 
-    @DrawableRes
-    private fun getPostButtonLikeResId(liked: Boolean) =
-        if (liked) R.drawable.liked else R.drawable.like
 
-    //Настройка отображения количества like и share
-    private fun setNumberOrder(num: Int): String {
-        if (num >= 1000000) {
 
-            var newNum: Double = num.toDouble() / 1000000
-            newNum = floor(newNum * 10.0) / 10.0
-            return newNum.toString() + "M"
 
-        } else if (num < 1000000 && num >= 10000) {
-
-            val newNum: Int = num / 1000
-            return newNum.toString() + "K"
-
-        } else if (num >= 1000 && num < 10000) {
-
-            var newNum: Double = num.toDouble() / 1000
-            newNum = floor(newNum * 10.0) / 10.0
-            return newNum.toString() + "K"
-
-        } else {
-            return num.toString()
-        }
-    }
-
-    //проверка на наличие самолайка
-    private fun checkLikeByMe(like: Boolean, num: Int): Int {
-        if (like) {
-            return num + 1
-        } else {
-            return num - 1
-        }
-    }
 
 }
 
