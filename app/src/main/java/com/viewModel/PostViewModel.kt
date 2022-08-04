@@ -13,7 +13,7 @@ class PostViewModel : ViewModel() {
 
     fun onLikeClicked() = repository.like()
 
-    fun onShareCkicked() = repository.share()
+    fun onShareClicked() = repository.share()
 
     fun setNumOrder(num: Int): String = repository.setNumberOrder(num)
 
