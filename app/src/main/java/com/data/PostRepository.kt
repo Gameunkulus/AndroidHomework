@@ -10,9 +10,4 @@ interface PostRepository {
     fun like()
 
     fun share()
-
-    fun setNumberOrder(num: Int): String
-
-    @DrawableRes
-    fun getPostButtonLikeResId(liked: Boolean): Int
 }

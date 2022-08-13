@@ -45,28 +45,7 @@ class InMemoryPostRepository : PostRepository {
     }
 
     //Настройка отображения количества like и share
-    override fun setNumberOrder(num: Int): String {
-        if (num >= 1000000) {
 
-            var newNum: Double = num.toDouble() / 1000000
-            newNum = floor(newNum * 10.0) / 10.0
-            return newNum.toString() + "M"
-
-        } else if (num < 1000000 && num >= 10000) {
-
-            val newNum: Int = num / 1000
-            return newNum.toString() + "K"
-
-        } else if (num >= 1000 && num < 10000) {
-
-            var newNum: Double = num.toDouble() / 1000
-            newNum = floor(newNum * 10.0) / 10.0
-            return newNum.toString() + "K"
-
-        } else {
-            return num.toString()
-        }
-    }
 
     fun checkLikeByMe(like: Boolean, num: Int): Int {
         if (like) {
@@ -75,10 +54,6 @@ class InMemoryPostRepository : PostRepository {
             return num - 1
         }
     }
-
-    @DrawableRes
-    override fun getPostButtonLikeResId(liked: Boolean) =
-        if (liked) R.drawable.liked else R.drawable.like
 
 
 }

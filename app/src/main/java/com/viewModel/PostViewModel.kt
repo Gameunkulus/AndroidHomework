@@ -15,10 +15,4 @@ class PostViewModel : ViewModel() {
 
     fun onShareClicked() = repository.share()
 
-    fun setNumOrder(num: Int): String = repository.setNumberOrder(num)
-
-    @DrawableRes
-    fun getPostButtonLikeResId(liked: Boolean) = repository.getPostButtonLikeResId(liked)
-
-
 }
