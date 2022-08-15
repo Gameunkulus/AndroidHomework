@@ -1,7 +1,7 @@
-package com.dto
+package com.data
 
 data class Post(
-    val id: Long,
+    val id: Int,
     val author: String,
     val content: String,
     val published: String,
