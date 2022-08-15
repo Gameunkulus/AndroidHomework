@@ -27,20 +27,21 @@ class MainActivity : AppCompatActivity() {
             binding.render(post)
         }
 
-        binding.netologyMark.setOnClickListener {
+        netology_mark.setOnClickListener {
             println("I love programming very mutch")
         }
 
-        binding.postButtonLike.setOnClickListener {
+        post_button_like.setOnClickListener {
             viewModel.onLikeClicked()
             getPostButtonLikeResId(viewModel.data.value!!.likeByMe)
         }
 
-        binding.postButtonShare.setOnClickListener {
+        post_button_share.setOnClickListener {
             viewModel.onShareClicked()
         }
 
     }
+
 
     private fun setNumberOrder(num: Int): String {
         if (num >= 1000000) {
