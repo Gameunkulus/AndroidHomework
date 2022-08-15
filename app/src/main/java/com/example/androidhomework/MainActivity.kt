@@ -27,13 +27,8 @@ class MainActivity : AppCompatActivity() {
             binding.render(post)
         }
 
-        netology_mark.setOnClickListener {
-            println("I love programming very mutch")
-        }
-
         post_button_like.setOnClickListener {
             viewModel.onLikeClicked()
-            getPostButtonLikeResId(viewModel.data.value!!.likeByMe)
         }
 
         post_button_share.setOnClickListener {
