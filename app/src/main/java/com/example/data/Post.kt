@@ -1,4 +1,4 @@
-package com.data
+package com.example.data
 
 data class Post(
     val id: Int,
