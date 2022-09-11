@@ -1,8 +1,9 @@
-package com.example.data.adapter
+package com.example.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,8 +14,7 @@ import com.example.androidhomework.databinding.PostListItemBinding
 import kotlin.math.floor
 
 class PostsAdapter(
-    private val onLikeClicked: (Post) -> Unit,
-    private val onShareClicked: (Post) -> Unit
+    private val interactionListener: PostInteractionListener
 ) : ListAdapter<Post, PostsAdapter.ViewHolder>(DiffCallBack) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,31 +23,49 @@ class PostsAdapter(
         val binding = PostListItemBinding.inflate(
             inflater, parent, false
         )
-        return ViewHolder(binding, onLikeClicked, onShareClicked)
+        return ViewHolder(binding, interactionListener)
     }
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("Posts adapter", "onBindViewHolder: $position")
-
         val post = getItem(position)
         holder.bind(post)
     }
 
     class ViewHolder(
         private val binding: PostListItemBinding,
-        private val onLikeClicked: (Post) -> Unit,
-        private val onShareClicked: (Post) -> Unit
+        listener: PostInteractionListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var post: Post
 
+        private val popupMenu by lazy {
+            PopupMenu(itemView.context, binding.postButtonMore).apply {
+                inflate(R.menu.options_post)
+                setOnMenuItemClickListener {menuItem ->
+                    when(menuItem.itemId){
+                        R.id.remove -> {
+                            listener.onRemoveClicked(post)
+                            true
+                        }
+                        R.id.edit ->{
+                            listener.onEditClicked(post)
+                            true
+                        }
+                        else -> false
+                    }
+                    false
+                }
+            }
+        }
+
         init {
             binding.postButtonLike.setOnClickListener {
-                onLikeClicked(post)
+                listener.onLikeClicked(post)
             }
             binding.postButtonShare.setOnClickListener {
-                onShareClicked(post)
+                listener.onShareClicked(post)
             }
         }
 
@@ -60,6 +78,7 @@ class PostsAdapter(
                 postShareNumber.text = setNumberOrder(post.share)
                 postLikeNumber.text = setNumberOrder(post.likes)
                 postButtonLike.setImageResource(getPostButtonLikeResId(post.likeByMe))
+                postButtonMore.setOnClickListener { popupMenu.show() }
             }
         }
 
