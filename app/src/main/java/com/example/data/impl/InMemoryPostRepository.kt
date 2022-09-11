@@ -3,6 +3,7 @@ package com.example.data.impl
 import androidx.lifecycle.MutableLiveData
 import com.example.data.Post
 import com.example.data.PostRepository
+import com.util.hideKeyBoard
 
 class InMemoryPostRepository : PostRepository {
 
@@ -59,7 +60,6 @@ class InMemoryPostRepository : PostRepository {
 
     override fun save(post: Post) {
         if (post.id == PostRepository.NEW_POST_ID) insert(post) else update(post)
-
     }
 
     private fun insert(post: Post) {
