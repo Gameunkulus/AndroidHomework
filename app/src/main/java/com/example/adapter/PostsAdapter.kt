@@ -43,13 +43,13 @@ class PostsAdapter(
         private val popupMenu by lazy {
             PopupMenu(itemView.context, binding.postButtonMore).apply {
                 inflate(R.menu.options_post)
-                setOnMenuItemClickListener {menuItem ->
-                    when(menuItem.itemId){
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
                         R.id.remove -> {
                             listener.onRemoveClicked(post)
                             true
                         }
-                        R.id.edit ->{
+                        R.id.edit -> {
                             listener.onEditClicked(post)
                             true
                         }
@@ -67,6 +67,7 @@ class PostsAdapter(
             binding.postButtonShare.setOnClickListener {
                 listener.onShareClicked(post)
             }
+            binding.postButtonMore.setOnClickListener { popupMenu.show() }
         }
 
         fun bind(post: Post) {
@@ -75,10 +76,10 @@ class PostsAdapter(
             with(binding) {
                 postText.text = post.author + "\n" + post.content
                 postTimePanel.text = post.published
-                postShareNumber.text = setNumberOrder(post.share)
-                postLikeNumber.text = setNumberOrder(post.likes)
-                postButtonLike.setImageResource(getPostButtonLikeResId(post.likeByMe))
-                postButtonMore.setOnClickListener { popupMenu.show() }
+                postButtonShare.text = setNumberOrder(post.share)
+                postButtonLike.text = setNumberOrder(post.likes)
+                postButtonLike.isChecked = post.likeByMe
+                postButtonShare.isPressed
             }
         }
 
@@ -103,10 +104,6 @@ class PostsAdapter(
                 return num.toString()
             }
         }
-
-        @DrawableRes
-        fun getPostButtonLikeResId(liked: Boolean) =
-            if (liked) R.drawable.liked else R.drawable.like
     }
 
     private object DiffCallBack : DiffUtil.ItemCallback<Post>() {

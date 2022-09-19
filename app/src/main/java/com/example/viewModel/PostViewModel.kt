@@ -32,7 +32,7 @@ class PostViewModel : ViewModel(), PostInteractionListener {
         currentPost.value = null
     }
 
-    override fun onLikeClicked(post: Post) = repository.like(post.id)
+    override fun onLikeClicked(post: Post) { repository.like(post.id)}
 
     override fun onShareClicked(post: Post) = repository.share(post.id)
 

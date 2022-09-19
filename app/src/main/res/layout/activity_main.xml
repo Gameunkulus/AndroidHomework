@@ -9,14 +9,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/posts_recycler_view"
         android:layout_width="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tools_top_barrier"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tools_top_barrier"
         tools:listitem="@layout/post_list_item"
         />
     
