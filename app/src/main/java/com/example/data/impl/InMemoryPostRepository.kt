@@ -3,7 +3,6 @@ package com.example.data.impl
 import androidx.lifecycle.MutableLiveData
 import com.example.data.Post
 import com.example.data.PostRepository
-import com.util.hideKeyBoard
 
 class InMemoryPostRepository : PostRepository {
 

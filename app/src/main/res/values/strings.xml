@@ -16,4 +16,6 @@
     <string name="new_post_text">Update</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_text">Post text</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="post_content">Post content</string>
 </resources>
