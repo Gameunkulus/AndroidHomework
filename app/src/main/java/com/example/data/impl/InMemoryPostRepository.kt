@@ -25,6 +25,7 @@ class InMemoryPostRepository : PostRepository {
                 published = "19 августа 2022",
                 likes = 999,
                 share = 98,
+                video = "https://www.youtube.com/watch?v=WhWc3b3KhnY",
                 likeByMe = false
             )
         }

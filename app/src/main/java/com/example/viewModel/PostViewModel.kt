@@ -16,6 +16,8 @@ class PostViewModel : ViewModel(), PostInteractionListener {
 
     val sharePostContent = SingleLiveEvent<String>()
 
+    val showPostVideo = SingleLiveEvent<String>()
+
     val currentPost = MutableLiveData<Post?>(null)
 
     override fun onLikeClicked(post: Post) { repository.like(post.id)}
@@ -23,6 +25,10 @@ class PostViewModel : ViewModel(), PostInteractionListener {
     override fun onShareClicked(post: Post) {
         sharePostContent.value = post.content
         repository.share(post.id)
+    }
+
+    override fun onVideoPostClicked(post: Post){
+        showPostVideo.value = post.video.toString()
     }
 
     fun onCreateNewPost(newPostContent: String){
@@ -36,7 +42,8 @@ class PostViewModel : ViewModel(), PostInteractionListener {
             id = PostRepository.NEW_POST_ID,
             author = "Me",
             content = newPostContent,
-            published = "Today"
+            published = "Today",
+            video = null
         )
         repository.save(post)
         currentPost.value = null

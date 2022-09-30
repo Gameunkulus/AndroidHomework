@@ -4,9 +4,11 @@ package com.example.androidhomework
 
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.example.activity.NewPostActivity
 import com.example.adapter.PostsAdapter
@@ -55,6 +57,15 @@ class MainActivity : AppCompatActivity() {
             val shareIntent = Intent.createChooser(intent, getString(R.string.chooser_share_post))
             startActivity(shareIntent)
         }
+
+        viewModel.showPostVideo.observe(this) {postVideo ->
+            val intent = Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .setData(Uri.parse("https://www.youtube.com/watch?v=WhWc3b3KhnY"))
+            startActivity(intent)
+        }
+
+
 
 
         binding.fab.setOnClickListener{
