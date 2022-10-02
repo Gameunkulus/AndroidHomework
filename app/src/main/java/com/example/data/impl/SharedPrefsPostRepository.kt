@@ -1,36 +1,52 @@
 package com.example.data.impl
 
+
 import android.app.Application
+import android.content.Context
+import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import com.example.data.Post
 import com.example.data.PostRepository
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.properties.Delegates
 
-class InMemoryPostRepository(application: Application) : PostRepository {
 
-    private var nextId = GENERATED_POSTS_AMOUNT
+class SharedPrefsPostRepository(
+    application: Application
+) : PostRepository {
+
+    private val prefs = application.getSharedPreferences(
+        "repo", Context.MODE_PRIVATE
+    )
+    private var nextId: Int by Delegates.observable(
+        prefs.getInt(NEXT_ID_PREFS_KEY, 0)
+    ) { _, _, newValue ->
+        prefs.edit { putInt(NEXT_ID_PREFS_KEY, newValue) }
+    }
+
 
     private var posts
-        get() = checkNotNull(data.value)
+        get() = checkNotNull(data.value) {
+            "Data value should be not null"
+        }
         set(value) {
+            prefs.edit {
+                val serializedPosts = Json.encodeToString(value)
+                putString(POSTS_PRESS_KEY, serializedPosts)
+            }
             data.value = value
         }
 
     override val data: MutableLiveData<List<Post>>
 
     init {
-        val initialPosts = List(GENERATED_POSTS_AMOUNT) { index ->
-            Post(
-                id = index + 1,
-                author = "Maxim",
-                content = "Контент поста №${index + 1}",
-                published = "19 августа 2022",
-                likes = 999,
-                share = 98,
-                video = "https://www.youtube.com/watch?v=WhWc3b3KhnY",
-                likeByMe = false
-            )
-        }
-        data = MutableLiveData(initialPosts)
+        val serializedPosts = prefs.getString(POSTS_PRESS_KEY, null)
+        val posts: List<Post> = if (serializedPosts != null) {
+            Json.decodeFromString(serializedPosts)
+        } else emptyList()
+        data = MutableLiveData(posts)
     }
 
     override fun like(postId: Int) {
@@ -64,20 +80,21 @@ class InMemoryPostRepository(application: Application) : PostRepository {
     }
 
     private fun insert(post: Post) {
-        data.value = listOf(
+        posts = listOf(
             post.copy(id = ++nextId)
         ) + posts
     }
 
     private fun update(post: Post) {
-        data.value = posts.map {
+        posts = posts.map {
             if (it.id == post.id) post else it
         }
     }
 
     private companion object {
-        const val GENERATED_POSTS_AMOUNT = 100
-
+        const val GENERATED_POSTS_AMOUNT = 1000
+        const val POSTS_PRESS_KEY = "posts"
+        const val NEXT_ID_PREFS_KEY = "nextId"
     }
 
     //Настройка отображения количества like и share

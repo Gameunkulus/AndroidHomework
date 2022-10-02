@@ -1,5 +1,8 @@
 package com.example.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Post(
     val id: Int,
     val author: String,

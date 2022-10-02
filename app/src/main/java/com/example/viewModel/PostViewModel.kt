@@ -1,16 +1,21 @@
 package com.example.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.adapter.PostInteractionListener
 import com.example.data.Post
 import com.example.data.PostRepository
-import com.example.adapter.PostInteractionListener
-import com.example.data.impl.InMemoryPostRepository
+import com.example.data.impl.FilePostRepository
 import com.example.util.SingleLiveEvent
 
-class PostViewModel : ViewModel(), PostInteractionListener {
+class PostViewModel(
+    application: Application
+) : AndroidViewModel(application),
+    PostInteractionListener {
 
-    private val repository: PostRepository = InMemoryPostRepository()
+    private val repository: PostRepository =
+        FilePostRepository(application)
 
     val data get() = repository.data
 
