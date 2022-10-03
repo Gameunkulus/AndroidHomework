@@ -3,17 +3,20 @@
 package com.example.androidhomework
 
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.example.activity.NewPostActivity
 import com.example.adapter.PostsAdapter
 import com.example.androidhomework.databinding.ActivityMainBinding
+import com.example.data.PostRepository
 import com.example.viewModel.PostViewModel
-import com.util.hideKeyBoard
-import com.util.showKeyBoard
-import kotlinx.android.synthetic.main.activity_main.view.*
+import com.example.util.hideKeyBoard
+import com.example.util.showKeyBoard
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,39 +30,46 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = PostsAdapter(viewModel)
 
+        val activityLauncher = registerForActivityResult(
+            NewPostActivity.ResultContract
+        ) { postContent: String? ->
+            postContent?.let (viewModel::onCreateNewPost)
+        }
+
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
 
-        binding.panelSaveButton.setOnClickListener {
-            with(binding.contentEditText) {
-                val content = text.toString()
-                viewModel.onSaveButtonClicked(content)
-                clearFocus()
-                hideKeyBoard()
-            }
-        }
-
-        binding.panelDeclineButton.setOnClickListener {
-            with(binding.contentEditText){
-                clearFocus()
-                hideKeyBoard()
-            }
-
-        }
         viewModel.currentPost.observe(this) { currentPost ->
             with(binding.contentEditText) {
-                val content = currentPost?.content
-                setText(content)
-                if (content != null) {
-                    requestFocus()
-                    showKeyBoard()
-                }
-                else{
-                    clearFocus()
+                if (currentPost != null) {
+                    activityLauncher.launch(currentPost.id)
                 }
             }
+        }
+        viewModel.sharePostContent.observe(this) { postContent ->
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, postContent)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(intent, getString(R.string.chooser_share_post))
+            startActivity(shareIntent)
+        }
+
+        viewModel.showPostVideo.observe(this) {postVideo ->
+            val intent = Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .setData(Uri.parse("https://www.youtube.com/watch?v=WhWc3b3KhnY"))
+            startActivity(intent)
+        }
+
+
+
+
+        binding.fab.setOnClickListener{
+            activityLauncher.launch(PostRepository.NEW_POST_ID)
         }
     }
 }

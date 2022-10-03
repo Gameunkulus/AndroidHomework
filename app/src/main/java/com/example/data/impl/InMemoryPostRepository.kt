@@ -3,7 +3,6 @@ package com.example.data.impl
 import androidx.lifecycle.MutableLiveData
 import com.example.data.Post
 import com.example.data.PostRepository
-import com.util.hideKeyBoard
 
 class InMemoryPostRepository : PostRepository {
 
@@ -26,6 +25,7 @@ class InMemoryPostRepository : PostRepository {
                 published = "19 августа 2022",
                 likes = 999,
                 share = 98,
+                video = "https://www.youtube.com/watch?v=WhWc3b3KhnY",
                 likeByMe = false
             )
         }

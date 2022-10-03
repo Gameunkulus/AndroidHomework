@@ -1,10 +1,14 @@
 package com.example.adapter
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +43,6 @@ class PostsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var post: Post
-
         private val popupMenu by lazy {
             PopupMenu(itemView.context, binding.postButtonMore).apply {
                 inflate(R.menu.options_post)
@@ -68,6 +71,10 @@ class PostsAdapter(
                 listener.onShareClicked(post)
             }
             binding.postButtonMore.setOnClickListener { popupMenu.show() }
+            binding.postVideo.setOnClickListener {
+                listener.onVideoPostClicked(post)
+            }
+
         }
 
         fun bind(post: Post) {
@@ -79,8 +86,15 @@ class PostsAdapter(
                 postButtonShare.text = setNumberOrder(post.share)
                 postButtonLike.text = setNumberOrder(post.likes)
                 postButtonLike.isChecked = post.likeByMe
-                postButtonShare.isPressed
+                postVideo.visibility = isVisible(post.video)
             }
+        }
+
+        private fun isVisible(check: String?): Int {
+            if (check == null) {
+                return 4
+            }
+            return 0
         }
 
 
