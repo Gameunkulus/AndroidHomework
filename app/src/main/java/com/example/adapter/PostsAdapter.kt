@@ -1,20 +1,15 @@
 package com.example.adapter
 
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.core.content.ContextCompat.RECEIVER_EXPORTED
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.data.Post
 import com.example.androidhomework.R
 import com.example.androidhomework.databinding.PostListItemBinding
+import com.example.data.Post
 import kotlin.math.floor
 
 class PostsAdapter(
