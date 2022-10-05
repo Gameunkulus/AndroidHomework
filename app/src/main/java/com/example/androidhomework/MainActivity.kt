@@ -5,18 +5,15 @@ package com.example.androidhomework
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.observe
 import com.example.activity.NewPostActivity
 import com.example.adapter.PostsAdapter
 import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.data.PostRepository
 import com.example.viewModel.PostViewModel
-import com.example.util.hideKeyBoard
-import com.example.util.showKeyBoard
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,7 +30,13 @@ class MainActivity : AppCompatActivity() {
         val activityLauncher = registerForActivityResult(
             NewPostActivity.ResultContract
         ) { postContent: String? ->
-            postContent?.let (viewModel::onCreateNewPost)
+            postContent?.let(viewModel::onCreateNewPost)
+        }
+
+        viewModel.currentPost.observe(this) { currentPost ->
+            if (currentPost != null) {
+                activityLauncher.launch(currentPost.id)
+            }
         }
 
         binding.postsRecyclerView.adapter = adapter
@@ -41,13 +44,6 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
-        viewModel.currentPost.observe(this) { currentPost ->
-            with(binding.contentEditText) {
-                if (currentPost != null) {
-                    activityLauncher.launch(currentPost.id)
-                }
-            }
-        }
         viewModel.sharePostContent.observe(this) { postContent ->
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -58,17 +54,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(shareIntent)
         }
 
-        viewModel.showPostVideo.observe(this) {postVideo ->
+        viewModel.showPostVideo.observe(this) { postVideo ->
             val intent = Intent()
                 .setAction(Intent.ACTION_VIEW)
                 .setData(Uri.parse("https://www.youtube.com/watch?v=WhWc3b3KhnY"))
             startActivity(intent)
         }
 
-
-
-
-        binding.fab.setOnClickListener{
+        binding.fab.setOnClickListener {
             activityLauncher.launch(PostRepository.NEW_POST_ID)
         }
     }
