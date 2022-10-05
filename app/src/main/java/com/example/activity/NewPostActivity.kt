@@ -7,12 +7,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import com.example.androidhomework.databinding.ActivityNewPostBinding
-import com.example.data.Post
 import com.example.util.hideKeyBoard
+import com.example.viewModel.PostViewModel
 import kotlinx.android.synthetic.main.activity_new_post.*
-import kotlinx.android.synthetic.main.activity_new_post.view.*
 
 class NewPostActivity : AppCompatActivity() {
 
@@ -23,6 +21,10 @@ class NewPostActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.edit.requestFocus()
+        val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+
+        if (PostViewModel.POST_CONTENT != "")
+        binding.edit.setText(PostViewModel.POST_CONTENT)
         binding.ok.setOnClickListener {
             onOkButtonClicked(binding.edit.text?.toString())
         }
@@ -63,8 +65,10 @@ class NewPostActivity : AppCompatActivity() {
 
     object ResultContract : ActivityResultContract<Int, String?>() {
 
-        override fun createIntent(context: Context, input: Int) =
-            Intent(context, NewPostActivity::class.java)
+        override fun createIntent(context:Context, input: Int): Intent {
+                return Intent(context, NewPostActivity::class.java).putExtra(Intent.EXTRA_TEXT,
+                    PostViewModel.POST_CONTENT)
+        }
 
         override fun parseResult(resultCode: Int, intent: Intent?): String? {
             if (resultCode != Activity.RESULT_OK) return null

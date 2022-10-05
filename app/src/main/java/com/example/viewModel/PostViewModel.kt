@@ -19,11 +19,15 @@ class PostViewModel(
 
     val data get() = repository.data
 
-    val sharePostContent = SingleLiveEvent<String>()
 
+    val sharePostContent = SingleLiveEvent<String>()
     val showPostVideo = SingleLiveEvent<String>()
 
     val currentPost = MutableLiveData<Post?>(null)
+
+    companion object{
+        var POST_CONTENT: String = ""
+    }
 
     override fun onLikeClicked(post: Post) { repository.like(post.id)}
 
@@ -57,6 +61,7 @@ class PostViewModel(
     override fun onRemoveClicked(post: Post) = repository.delete(post.id)
 
     override fun onEditClicked(post: Post) {
+        POST_CONTENT = post.content
         currentPost.value = post
     }
 
